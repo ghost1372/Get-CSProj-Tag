@@ -13,26 +13,49 @@ namespace Get_CSProj_Tag
                 Environment.Exit(1);
             }
 
-            // Extract command-line arguments
-            string csprojFilePath = args[0];
-            string[] tags = args[1].Split('|');
-
-            try
+            if (args.Length == 2)
             {
-                // Read the CSProj file and extract the tag value
-                var tagValues = ReadTagValues(csprojFilePath, tags);
+                // Extract command-line arguments
+                string csprojFilePath = args[0];
+                string[] tags = args[1].Split('|');
 
-                // Output the result
-                for (int i = 0; i < tags.Length; i++)
+                try
                 {
-                    Console.WriteLine($"{tagValues[i]}");
+                    // Read the CSProj file and extract the tag value
+                    var tagValues = ReadTagValues(csprojFilePath, tags);
+
+                    // Output the result
+                    for (int i = 0; i < tags.Length; i++)
+                    {
+                        Console.WriteLine($"{tagValues[i]}");
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("");
+                    Environment.Exit(1);
                 }
             }
-            catch (Exception)
+            else if (args.Length == 3)
             {
-                Console.WriteLine("");
-                Environment.Exit(1);
+                // Extract command-line arguments
+                string csprojFilePath = args[0];
+                string[] tags = args[2].Split('|');
+
+                try
+                {
+                    // Read the CSProj file and extract the tag value
+                    var tagValues = ReadTagValues(csprojFilePath, tags);
+
+                    Console.WriteLine($"{string.Join("|", tagValues)}");
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("");
+                    Environment.Exit(1);
+                }
             }
+            
         }
 
         static string[]? ReadTagValues(string csprojFilePath, string[] tags)
