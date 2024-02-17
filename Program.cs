@@ -15,15 +15,18 @@ namespace Get_CSProj_Tag
 
             // Extract command-line arguments
             string csprojFilePath = args[0];
-            string tagName = args[1];
+            string[] tags = args[1].Split('|');
 
             try
             {
                 // Read the CSProj file and extract the tag value
-                string tagValue = ReadTagValue(csprojFilePath, tagName);
+                var tagValues = ReadTagValues(csprojFilePath, tags);
 
                 // Output the result
-                Console.WriteLine($"{tagValue}");
+                for (int i = 0; i < tags.Length; i++)
+                {
+                    Console.WriteLine($"{tagValues[i]}");
+                }
             }
             catch (Exception)
             {
@@ -32,25 +35,32 @@ namespace Get_CSProj_Tag
             }
         }
 
-        static string? ReadTagValue(string csprojFilePath, string tagName)
+        static string[]? ReadTagValues(string csprojFilePath, string[] tags)
         {
             // Load the CSProj file
             XmlDocument doc = new XmlDocument();
             doc.Load(csprojFilePath);
 
-            // Find the specified tag in the CSProj file
-            XmlNodeList nodes = doc.GetElementsByTagName(tagName);
+            // Initialize an array to store tag values
+            string[] tagValues = new string[tags.Length];
 
-            // Check if the tag exists
-            if (nodes.Count == 0)
+            // Loop through each tag and extract its value
+            for (int i = 0; i < tags.Length; i++)
             {
-                return null;
+                // Find the specified tag in the CSProj file
+                XmlNodeList nodes = doc.GetElementsByTagName(tags[i]);
+
+                // Check if the tag exists
+                if (nodes.Count == 0)
+                {
+                    return null;
+                }
+
+                // Get the value of the tag
+                tagValues[i] = nodes[0].InnerText;
             }
 
-            // Get the value of the tag
-            string tagValue = nodes[0].InnerText;
-
-            return tagValue;
+            return tagValues;
         }
     }
 }
